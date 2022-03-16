@@ -2,18 +2,43 @@ import { useState, useEffect} from 'react'
 import { useParams } from "react-router-dom"
 
 import { client } from '../client'
+import { feedQuery, searchQuery } from '../utils/data'
 import MasonryLayout from './MasonryLayout'
+import Search from './Search'
 import Spinner from './Spinner'
 
 
 const Feed = () => {
 
-    const [loading, setLoading ] = useState (false)
+    const [ loading, setLoading ] = useState (false)
+    const { categoryId } = useParams()
+    const [ pins, setPins ] = useState (false)
 
-    if(!loading) return <Spinner message="feeding to feed feed" />
+    useEffect(() => {
+        if (categoryId) {
+            setLoading(true);
+            const query = searchQuery(categoryId);
+            client.fetch(query).then((data) => {
+                setPins(data);
+                setLoading(false);
+            });
+        } else {
+            setLoading(true);
+    
+            client.fetch(feedQuery).then((data) => {
+                setPins(data);
+                setLoading(false);
+            });
+        }
+    }, [categoryId]);
+
+    if(loading) return <Spinner message="feeding to feed feed" />
+
+    console.log(pins)
+
     return (
         <div>
-            Feed
+            {pins && <MasonryLayout pins={pins}/>}
         </div>
     )
     
