@@ -12,6 +12,7 @@ import Pins from "./Pins"
 import logo from '../assets/logo.png'
 
 import { userQuery } from "../utils/data"
+import { fetchUser } from "../utils/fetchUser"
 
 const Home = () => {
 
@@ -20,7 +21,7 @@ const Home = () => {
 
     const scrollRef = useRef()
 
-    const userInfo = localStorage.getItem('user') !== 'undefined' ? JSON.parse(localStorage.getItem('user')) : localStorage.clear()
+    const userInfo = fetchUser()
 
     useEffect(()=>{
         const query = userQuery(userInfo?.googleId);
