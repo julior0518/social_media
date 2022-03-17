@@ -18,10 +18,39 @@ const Pin = ( { pin : { postedBy, image, _id, destination, save }}) => {
     const userInfo = fetchUser()
 
     //// use !! to turn into bullion value from a number value (optimized)
-    const alreadySaved = !!(save?.filter((item) => item.postedBy._id === userInfo.googelId))?.length 
+    let alreadySaved = save?.filter((item) => item?.postedBy?._id === userInfo?.googleId);
 
-    console.log (userInfo)
 
+    const savePin = (id) => {
+        if(!alreadySaved){
+            setSavingPost(true);
+            
+            client
+                .patch(id)
+                .setIfMissing({ save: [] })
+                .insert('after', 'save[-1]', [{
+                    _key: uuidv4(),
+                    userId: userInfo.googleId,
+                    postedBy: {
+                        _type: 'postedBy',
+                        _ref: userInfo.googleId
+                    }
+                }])
+                .commit()
+                .then(()=>{
+                    window.location.reload()
+                    setSavingPost(false)
+                })
+        }
+    }
+
+    const deletePin = (id) => {
+        client
+            .delete(id)
+            .then(()=>{
+                window.location.reload()
+            })
+    }
     return (
         <div className="m-2">
             <div onMouseEnter={()=>{setPostHovered(true)}} onMouseLeave={()=>{setPostHovered(false)}} onClick={()=>{navigate(`/pin-detail/${_id}`)}} className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500">
@@ -34,12 +63,53 @@ const Pin = ( { pin : { postedBy, image, _id, destination, save }}) => {
                                     <MdDownloadForOffline />
                                 </a>
                             </div>
-                            {alreadySaved ?(
-                                <button type="button" className="bg-red-500">Saved</button>
-                            ) : (
-                                <button type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shador-md outline-none ">Save</button>
+                            {alreadySaved ? (
+                                <button type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
+                                    onClick={(e)=> 
+                                        e.stopPropagation()
+                                    }
+                                >
+                                    {save?.length}  Saved
+                                </button>
+                                ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        savePin(_id);
+                                    }}
+                                    type="button"
+                                    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
+                                >
+                                    {save?.length}   {savingPost ? 'Saving' : 'Save'}
+                                </button>
                             )}
-                        </div> 
+                        </div>
+                        <div className="flex justify-between items-center gap-2 w-full">
+                                    {destination && (
+                                        <a 
+                                            href={destination}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="bg-white flex items-center gap-2 text-black justify-center font-bold p-2 pl4 pr-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <BsFillArrowUpRightCircleFill />
+                                            {destination.length > 20 ? destination.slice(8,20) : destination.slice(8)}
+                                        </a>
+                                    )}
+                                    {postedBy?._id === userInfo.googleId && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deletePin(_id);
+                                            }}
+                                            type="button"
+                                            className="bg-white flex items-center gap-2 text-black justify-center font-bold p-2  rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
+                                        >
+                                            <AiTwotoneDelete />
+                                        </button>
+                                    )}
+                        </div>
                     </div>
                 )}
             </div>
