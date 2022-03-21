@@ -15,13 +15,12 @@ import { userQuery } from "../utils/data"
 import { fetchUser } from "../utils/fetchUser"
 
 const Home = () => {
+    const scrollRef = useRef()
+    const userInfo = fetchUser()
 
     const [toggleSidebar, setToggleSidebar] = useState(false); 
     const [user, setUser] = useState()
-
-    const scrollRef = useRef()
-
-    const userInfo = fetchUser()
+    
 
     useEffect(()=>{
         const query = userQuery(userInfo?.googleId);
@@ -36,6 +35,7 @@ const Home = () => {
         scrollRef.current.scrollTo(0,0)
     },[])
 
+    
     return (
         <div className="flex bg-gray-50 md:flex-row flex-col h-screen transaction-height duration-75 ease-out">  
             <div className="hidden md:flex h-screen flex-initial">
@@ -60,6 +60,7 @@ const Home = () => {
                 </div>
                 )}
             </div>
+            
             <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
                 <Routes>
                     <Route path="/user-profile/:userId" element = {<UserProfile />}/>

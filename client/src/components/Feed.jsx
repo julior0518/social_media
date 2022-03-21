@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react'
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
 import { client } from '../client'
 import { feedQuery, searchQuery } from '../utils/data'
@@ -33,7 +33,7 @@ const Feed = () => {
     }, [categoryId]);
 
     if(loading) return <Spinner message="feeding to feed feed" />
-
+    
 
     if(!pins?.length) return <h2>No posts yet</h2>
     return (
