@@ -34,6 +34,8 @@ const Feed = () => {
 
     if(loading) return <Spinner message="feeding to feed feed" />
 
+
+    if(!pins?.length) return <h2>No posts yet</h2>
     return (
         <div>
             {pins && <MasonryLayout pins={pins}/>}
