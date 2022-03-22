@@ -5,7 +5,6 @@ import { IoMdAdd, IoMdSearch } from 'react-icons/io'
 
 
 const NavBar = ({ searchTerm, setSearchTerm, user }) => {
-    console.log(user)
     const navigate = useNavigate()
     // if (!user) return null;
     return (

@@ -97,6 +97,8 @@ const PinDetail = ({ user }) => {
                         </div>
                     ))}
                 </div>
+                {user
+                ? 
                 <div className="flex flex-wrap mt-6 gap-3 justify-center items-center">
                     <Link to={`user-profile/${pinDetails.postedBy?._id}`} >
                         <img className="w-8 h-8 rounded-full cursor-pointer" src={pinDetails.postedBy?.image} alt="user-profile" />
@@ -106,6 +108,10 @@ const PinDetail = ({ user }) => {
                         {addingComment ? 'Posting the comment...' : 'Post'}
                     </button>
                 </div>
+                : <Link to="/login">
+                    <p className="pt-2 cursor-pointer hover:underline" >Login to leave a comment</p>
+                </Link>}
+                
             </div>
         </div>
         {pins?.length > 0 ? (
