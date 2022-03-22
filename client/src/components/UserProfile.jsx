@@ -14,7 +14,7 @@ const activeBtnStyles = "bg-red-500 text-white font-bold p-2 rounded-full w-20 o
 const notActiveBtnStyles = "bg-primary text-black font-bold p-2 rounded-full w-20 outline-none"
 
 
-const UserProfile = () => {
+const UserProfile = ({setCurrentUser}) => {
 
     const [user, setUser] = useState(null)
     const [pins, setPins] = useState(null)
@@ -48,8 +48,8 @@ const UserProfile = () => {
 
     const logout = () => {
         localStorage.clear()
-
-        navigate('/login')
+        setCurrentUser(null)
+        navigate('/')
     }
 
 
@@ -64,6 +64,9 @@ const UserProfile = () => {
                         <h1 className="font-bold text-3xl text-center mt-3">
                             {user.userName}
                         </h1>
+                        {localStorage.length === 0 
+                        ? null
+                        :
                         <div className="absolute top-0 z-1 right-0 p-2">
                             {userId === user._id && (
                                 <GoogleLogout
@@ -83,6 +86,8 @@ const UserProfile = () => {
                                 />
                             )}
                         </div>
+                        }
+
                     </div>
                     <div className="text-center mb-7">
                         <button type="button" onClick={(e) =>{setText(e.target.textContent); setActiveBtn('created')}} className={`${activeBtn === 'created' ? activeBtnStyles : notActiveBtnStyles }`}>
@@ -103,7 +108,6 @@ const UserProfile = () => {
                     )}
                 </div>
             </div>
-            US
         </div>
     )
     
