@@ -7,8 +7,10 @@ import { client, urlFor } from "../client";
 import MasonryLayout from './MasonryLayout'
 import {pinDetailMorePinQuery, pinDetailQuery} from '../utils/data'
 import Spinner from "./Spinner";
-import { IoMdHeartEmpty } from "react-icons/io";
+
 import { AiTwotoneDelete } from 'react-icons/ai'
+///for likes tbd
+import { IoMdHeartEmpty } from "react-icons/io";
 
 
 
@@ -41,7 +43,6 @@ const PinDetail = ({ user }) => {
     useEffect(()=>{
         fetchPinDetails()
     },[pinId])
-
     if(!pinDetails) return <Spinner message="Loading post..."/>
 
     const addComment = () => {
