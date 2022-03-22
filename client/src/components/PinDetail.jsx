@@ -101,7 +101,7 @@ const PinDetail = ({ user }) => {
                     <Link to={`user-profile/${pinDetails.postedBy?._id}`} >
                         <img className="w-8 h-8 rounded-full cursor-pointer" src={pinDetails.postedBy?.image} alt="user-profile" />
                     </Link>
-                    <input className="flex-1 border-gray-100 outline-none border-2 p-2 rounded-2xl focus:border-gray-300" type="text" placeholder="Add a comment" value={comment} onChange={(e) => setComment(e.target.value)}></input>
+                    <input className="flex-1 border-gray-100 outline-none border-2 p-2 rounded-2xl focus:border-gray-300" type="text" placeholder="Add a comment" value={comment ? comment : ''} onChange={(e) => setComment(e.target.value)}></input>
                     <button onClick={addComment} type="button" className="bg-red-400 text-white rounded-full px-6 py-2 font-seibold text-base outline-none">
                         {addingComment ? 'Posting the comment...' : 'Post'}
                     </button>
@@ -116,7 +116,9 @@ const PinDetail = ({ user }) => {
                 <MasonryLayout pins={pins} />
             </>
         ) : (
-            <Spinner message="Loading related stuff and things"/>
+            pins?.length === 0 
+            ? null
+            : <Spinner message="Loading related stuff and things"/>
         )}
         </>
     )
