@@ -78,7 +78,8 @@ const UserProfile = ({setCurrentUser}) => {
                                             onClick={renderProps.onClick}
                                             disabled={renderProps.disabled}
                                         >
-                                            <AiOutlineLogout color='red' fontSize={21}/> Logout
+                                            <AiOutlineLogout color='red' fontSize={21}/> 
+                                            <h4 className="ml-2 mr-2">Logout</h4>
                                         </button>
                                     )}
                                     onLogoutSuccess={logout}
