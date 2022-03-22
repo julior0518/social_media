@@ -8,6 +8,8 @@ import MasonryLayout from './MasonryLayout'
 import {pinDetailMorePinQuery, pinDetailQuery} from '../utils/data'
 import Spinner from "./Spinner";
 import { IoMdHeartEmpty } from "react-icons/io";
+import { AiTwotoneDelete } from 'react-icons/ai'
+
 
 
 const PinDetail = ({ user }) => {
@@ -18,8 +20,6 @@ const PinDetail = ({ user }) => {
     const [ addingComment, setAddingComment ] = useState(null)
     // fetched from url beacuse its called on the route
     const {pinId} = useParams()
-
-
 
     const fetchPinDetails = () => {
         let query = pinDetailQuery(pinId)
@@ -48,7 +48,7 @@ const PinDetail = ({ user }) => {
         if (comment) {
             setAddingComment(true);
 
-            client
+        client
             .patch(pinId)
             .setIfMissing({ comments: [] })
             .insert('after', 'comments[-1]', [{ comment, _key: uuidv4(), postedBy: { _type: 'postedBy', _ref: user._id } }])
@@ -60,7 +60,12 @@ const PinDetail = ({ user }) => {
             });
         }
     };
-    
+
+
+    const deleteComent = (i) => {
+        const commentRemoving = [`comments[${i}]`]
+        client.patch(pinId).unset(commentRemoving).commit()         
+    }
     return (
         <>
         <div className="flex xl-flex-row flex-col m-auto bg-white" style={{maxWidth: '1500px', borderRadius:'32px'}}>
@@ -90,10 +95,23 @@ const PinDetail = ({ user }) => {
                         <div className="flex gap-2 mt-5 items-center bg-white rounde-lg" key={i}>
                             <img src={c.postedBy.image} alt="user-profile" className="w-10 h-10 rounded-full cursor-pointer"/>
                             <div className="felx flex-col"> 
-                                <p className="font-bold">{c.postedBy.userName}</p>
+                                <p className="font-bold flex">{c.postedBy.userName}
+                                {c.postedBy?._id === user?._id && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteComent(c._key, i);
+                                        }}
+                                        type="button"
+                                        className="bg-white flex  items-center text-black font-bold pl-2  opacity-40 hover:opacity-80 "
+                                    >
+                                        <AiTwotoneDelete />
+                                    </button>
+                                )}
+                                </p>
                                 <p>{c.comment}</p>
                             </div>
-
+                            
                         </div>
                     ))}
                 </div>
